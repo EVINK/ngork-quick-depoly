@@ -1,4 +1,4 @@
-# ngork-quick-depoly
+# ngrok-quick-depoly
 
 ENV-Success: Ubuntu 18.04 LTS (Server&Client)
 
