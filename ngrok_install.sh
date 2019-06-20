@@ -1,42 +1,11 @@
 #!/bin/bash
 # -*- coding: UTF-8 -*-
 # 获取当前脚本执行路径
-SELFPATH=$(cd "$(dirname "$0")"; pwd)
+SELFPATH=$(cd "$(dirname .)"; pwd)
 GOOS=`go env | grep GOOS | awk -F\" '{print $2}'`
 GOARCH=`go env | grep GOARCH | awk -F\" '{print $2}'`
 echo '请输入一个域名'
 read DOMAIN
-install_yilai(){
-    apt-get install zlib-devel openssl-devel perl hg cpio expat-devel gettext-devel curl curl-devel perl-ExtUtils-MakeMaker hg wget gcc gcc-c++ unzip -y
-}
-
-# 安装git
-install_git(){
-    unstall_git
-    if [ ! -f $SELFPATH/git-2.9.3.tar.gz ];then
-        wget https://www.kernel.org/pub/software/scm/git/git-2.9.3.tar.gz
-    fi
-    tar zxvf git-2.9.3.tar.gz
-    cd git-2.9.3
-    ./configure --prefix=/usr/local/git
-    make
-    make install
-    ln -s /usr/local/git/bin/* /usr/bin/
-    rm -rf $SELFPATH/git-2.9.3
-}
-
-# 卸载git
-unstall_git(){
-    rm -rf /usr/local/git
-    rm -rf /usr/local/git/bin/git
-    rm -rf /usr/local/git/bin/git-cvsserver
-    rm -rf /usr/local/git/bin/gitk
-    rm -rf /usr/local/git/bin/git-receive-pack
-    rm -rf /usr/local/git/bin/git-shell
-    rm -rf /usr/local/git/bin/git-upload-archive
-    rm -rf /usr/local/git/bin/git-upload-pack
-}
-
 
 # 安装go
 install_go(){
@@ -47,13 +16,13 @@ install_go(){
     # 判断操作系统位数下载不同的安装包
     if [ $(getconf WORD_BIT) = '32' ] && [ $(getconf LONG_BIT) = '64' ];then
         # 判断文件是否已经存在
-        if [ ! -f $SELFPATH/go1.4.2.linux-amd64.tar.gz ];then
+        if [ !-f $SELFPATH/go1.4.2.linux-amd64.tar.gz ];then
             # wget http://www.golangtc.com/static/go/1.4.2/go1.4.2.linux-amd64.tar.gz
             wget https://dl.google.com/go/go1.12.4.linux-amd64.tar.gz
         fi
         tar zxvf go1.12.4.linux-amd64.tar.gz
     else
-        if [ ! -f $SELFPATH/go1.4.2.linux-386.tar.gz ];then
+        if [ !-f $SELFPATH/go1.4.2.linux-386.tar.gz ];then
             wget http://www.golangtc.com/static/go/1.4.2/go1.4.2.linux-386.tar.gz
         fi
         tar zxvf go1.4.2.linux-386.tar.gz
@@ -63,7 +32,6 @@ install_go(){
 }
 
 # 卸载go
-
 uninstall_go(){
     rm -rf /usr/local/go
     rm -rf /usr/bin/go
@@ -75,9 +43,9 @@ uninstall_go(){
 install_ngrok(){
     uninstall_ngrok
     cd /usr/local
-    if [ ! -f /usr/local/ngrok.zip ];then
+    if [ !-f /usr/local/ngrok.zip ];then
         cd /usr/local/
-        wget http://www.sunnyos.com/ngrok.zip
+        wget http://cdn.evink.cn/ngrok.zip
     fi
     unzip ngrok.zip
     export GOPATH=/usr/local/ngrok/
@@ -97,7 +65,7 @@ install_ngrok(){
     GOOS=$GOOS GOARCH=$GOARCH ./make.bash
     cd /usr/local/ngrok
     GOOS=$GOOS GOARCH=$GOARCH make release-server
-    /usr/local/ngrok/bin/ngrokd -domain=$NGROK_DOMAIN -httpAddr=":80"
+    # /usr/local/ngrok/bin/ngrokd -domain=$NGROK_DOMAIN -httpAddr=":80"
 }
 
 # 卸载ngrok
@@ -134,16 +102,16 @@ client(){
         [3] )
             compile_client windows 386
         ;;
-        [4] ) 
+        [4] )
             compile_client windows amd64
         ;;
-        [5] ) 
+        [5] )
             compile_client darwin 386
         ;;
-        [6] ) 
+        [6] )
             compile_client darwin amd64
         ;;
-        [7] ) 
+        [7] )
             compile_client linux arm
         ;;
         *) echo "选择错误，退出";;
@@ -153,57 +121,61 @@ client(){
 
 
 echo "请输入下面数字进行选择"
-echo "#############################################"
-echo "#作者网名：Javen"
-echo "#############################################"
+echo "-------------------------------------------------"
+echo "| 原作者：Javen"
+echo "| 修改：EvinK@foxmail.com"
+echo "| 修改后的版本在Ubuntu 16.04 LTS 及 Ubuntu 18.04 LTS上成功安装 "
+echo "-------------------------------------------------"
+echo
 echo "------------------------"
 echo "1、全新安装"
-echo "2、安装依赖"
-echo "3、安装git"
-echo "4、安装go环境"
-echo "5、安装ngrok"
-echo "6、生成客户端"
-echo "7、卸载"
-echo "8、启动服务"
-echo "9、查看配置文件"
+# echo "2、安装依赖"
+# echo "3、安装git"
+echo "2、安装go环境"
+echo "3、安装ngrok"
+echo "4、生成客户端"
+echo "5、卸载"
+# echo "8、启动服务"
+# echo "9、查看配置文件"
 echo "------------------------"
 read num
 case "$num" in
     [1] )
-        install_yilai
-        install_git
+        # install_yilai
+        # install_git
         install_go
         install_ngrok
     ;;
+    # [2] )
+    #     install_yilai
+    # ;;
+    # [3] )
+    #     install_git
+    # ;;
     [2] )
-        install_yilai
+        install_go
     ;;
     [3] )
-        install_git
-    ;;
-    [4] )
-        install_go
-    ;;
-    [5] )
         install_ngrok
     ;;
-    [6] )
+    [4] )
         client
     ;;
-    [7] )
-        unstall_git
+    [5] )
+        # unstall_git
         uninstall_go
         uninstall_ngrok
     ;;
-    [8] )
-        
-        echo "启动端口"
-        read port
-        /usr/local/ngrok/bin/ngrokd -domain=$DOMAIN -httpAddr=":$port"
-    ;;
+    # [8] )
+
+    #     echo "启动端口"
+    #     read port
+    #     /usr/local/ngrok/bin/ngrokd -domain=$DOMAIN -httpAddr=":$port"
+    # ;;
     [9] )
         echo "#############################################"
-        echo "#作者网名：Javen"
+        echo "#原作者：Javen"
+        echo "#修改：EvinK@foxmail.com"
         echo "#创建ngrok.cfg文件并添加以下内容"
         echo server_addr: '"'$DOMAIN:4443'"'
         echo "trust_host_root_certs: false"
