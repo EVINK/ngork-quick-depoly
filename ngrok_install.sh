@@ -1,28 +1,31 @@
 #!/bin/bash
 # -*- coding: UTF-8 -*-
 # 获取当前脚本执行路径
-SELFPATH=$(cd "$(dirname .)"; pwd)
-GOOS=`go env | grep GOOS | awk -F\" '{print $2}'`
-GOARCH=`go env | grep GOARCH | awk -F\" '{print $2}'`
-echo '请输入一个域名'
+SELFPATH=$(
+    cd "$(dirname .)"
+    pwd
+)
+GOOS=$(go env | grep GOOS | awk -F\" '{print $2}')
+GOARCH=$(go env | grep GOARCH | awk -F\" '{print $2}')
+echo '请输入一个域名 / Please Input A Domain: '
 read DOMAIN
 
 # 安装go
-install_go(){
+install_go() {
     cd $SELFPATH
     uninstall_go
     # 动态链接库，用于下面的判断条件生效
     ldconfig
     # 判断操作系统位数下载不同的安装包
-    if [ $(getconf WORD_BIT) = '32' ] && [ $(getconf LONG_BIT) = '64' ];then
+    if [ $(getconf WORD_BIT) = '32' ] && [ $(getconf LONG_BIT) = '64' ]; then
         # 判断文件是否已经存在
-        if [ !-f $SELFPATH/go1.4.2.linux-amd64.tar.gz ];then
+        if [ ! -d $SELFPATH/go1.4.2.linux-amd64.tar.gz ]; then
             # wget http://www.golangtc.com/static/go/1.4.2/go1.4.2.linux-amd64.tar.gz
             wget https://dl.google.com/go/go1.12.4.linux-amd64.tar.gz
         fi
         tar zxvf go1.12.4.linux-amd64.tar.gz
     else
-        if [ !-f $SELFPATH/go1.4.2.linux-386.tar.gz ];then
+        if [ ! -d $SELFPATH/go1.4.2.linux-386.tar.gz ]; then
             wget http://www.golangtc.com/static/go/1.4.2/go1.4.2.linux-386.tar.gz
         fi
         tar zxvf go1.4.2.linux-386.tar.gz
@@ -32,7 +35,7 @@ install_go(){
 }
 
 # 卸载go
-uninstall_go(){
+uninstall_go() {
     rm -rf /usr/local/go
     rm -rf /usr/bin/go
     rm -rf /usr/bin/godoc
@@ -40,10 +43,10 @@ uninstall_go(){
 }
 
 # 安装ngrok
-install_ngrok(){
+install_ngrok() {
     uninstall_ngrok
     cd /usr/local
-    if [ !-f /usr/local/ngrok.zip ];then
+    if [ ! -d /usr/local/ngrok.zip ]; then
         cd /usr/local/
         wget http://cdn.evink.cn/ngrok.zip
     fi
@@ -69,12 +72,12 @@ install_ngrok(){
 }
 
 # 卸载ngrok
-uninstall_ngrok(){
+uninstall_ngrok() {
     rm -rf /usr/local/ngrok
 }
 
 # 编译客户端
-compile_client(){
+compile_client() {
     cd /usr/local/go/src
     GOOS=$1 GOARCH=$2 ./make.bash
     cd /usr/local/ngrok/
@@ -82,7 +85,7 @@ compile_client(){
 }
 
 # 生成客户端
-client(){
+client() {
     echo "1、Linux 32位"
     echo "2、Linux 64位"
     echo "3、Windows 32位"
@@ -93,105 +96,101 @@ client(){
 
     read num
     case "$num" in
-        [1] )
-            compile_client linux 386
+    [1])
+        compile_client linux 386
         ;;
-        [2] )
-            compile_client linux amd64
+    [2])
+        compile_client linux amd64
         ;;
-        [3] )
-            compile_client windows 386
+    [3])
+        compile_client windows 386
         ;;
-        [4] )
-            compile_client windows amd64
+    [4])
+        compile_client windows amd64
         ;;
-        [5] )
-            compile_client darwin 386
+    [5])
+        compile_client darwin 386
         ;;
-        [6] )
-            compile_client darwin amd64
+    [6])
+        compile_client darwin amd64
         ;;
-        [7] )
-            compile_client linux arm
+    [7])
+        compile_client linux arm
         ;;
-        *) echo "选择错误，退出";;
+    *) echo "选择错误，退出" ;;
     esac
 
 }
 
-
-echo "请输入下面数字进行选择"
-echo "-------------------------------------------------"
-echo "| 原作者：Javen"
-echo "| 修改：EvinK@foxmail.com"
-echo "| 修改后的版本在Ubuntu 16.04 LTS 及 Ubuntu 18.04 LTS上成功安装 "
-echo "-------------------------------------------------"
+echo ""
+echo "------------------------------------------------------------------------------"
+echo "| 原作者 Original Author：Javen"
+echo "| 修改 Author：EvinK@foxmail.com"
+echo "| Success on Ubuntu 16.04 & 18.04 LTS "
+echo "------------------------------------------------------------------------------"
+echo
+echo " 默认您已安装必要的依赖和工具(例如Git)"
 echo
 echo "------------------------"
-echo "1、全新安装"
-# echo "2、安装依赖"
-# echo "3、安装git"
-echo "2、安装go环境"
-echo "3、安装ngrok"
-echo "4、生成客户端"
-echo "5、卸载"
-# echo "8、启动服务"
-# echo "9、查看配置文件"
+echo "1、全新安装 / Fresh Install "
+echo "2、安装go环境 / Install Go Environment"
+echo "3、安装服务端 / Install Ngrokd Server"
+echo "4、生成客户端 / Generate Ngrok Client"
+echo "5、卸载 / Uninstall"
 echo "------------------------"
 read num
 case "$num" in
-    [1] )
-        # install_yilai
-        # install_git
-        install_go
-        install_ngrok
+[1])
+    echo
+    echo
+    echo "全新安装将不会安装客户端， 请在安装成功后在此运行此脚本，选择选项4以安装客户端"
+    echo "Fresh Install will not install ngrok client, please run this script with option 4 after Setp 1 is SUCCESS"
+    echo
+    echo
+    install_go
+    install_ngrok
     ;;
-    # [2] )
-    #     install_yilai
-    # ;;
-    # [3] )
-    #     install_git
-    # ;;
-    [2] )
-        install_go
+[2])
+    install_go
     ;;
-    [3] )
-        install_ngrok
+[3])
+    install_ngrok
     ;;
-    [4] )
-        client
+[4])
+    client
     ;;
-    [5] )
-        # unstall_git
-        uninstall_go
-        uninstall_ngrok
+[5])
+    uninstall_go
+    uninstall_ngrok
     ;;
-    # [8] )
-
-    #     echo "启动端口"
-    #     read port
-    #     /usr/local/ngrok/bin/ngrokd -domain=$DOMAIN -httpAddr=":$port"
-    # ;;
-    [9] )
-        echo "#############################################"
-        echo "#原作者：Javen"
-        echo "#修改：EvinK@foxmail.com"
-        echo "#创建ngrok.cfg文件并添加以下内容"
-        echo server_addr: '"'$DOMAIN:4443'"'
-        echo "trust_host_root_certs: false"
-        echo "#############################################"
-        echo "#############################################"
-        echo "#Window启动脚本"
-        echo "ngrok -config=ngrok.cfg -subdomain=你域名的前缀  本地映射的端口号"
-        echo "ngrok -config=ngrok.cfg -subdomain=javen  80"
-        echo "#############################################"
-        echo "#############################################"
-        echo "#Linux Mac 启动脚本"
-        echo "./ngrok -config=./ngrok.cfg -subdomain=你域名的前缀  本地映射的端口号"
-        echo "./ngrok -config=./ngrok.cfg -subdomain=javen  80"
-        echo "#Linux Mac 后台启动脚本"
-        echo "setsid ./ngrok -config=./ngrok.cfg -subdomain=javen 80"
-        echo "#############################################"
+[9])
+    echo "#############################################"
+    echo "#原作者：Javen"
+    echo "#修改：EvinK@foxmail.com"
+    echo "#创建ngrok.cfg文件并添加以下内容"
+    echo server_addr: '"'$DOMAIN:4443'"'
+    echo "trust_host_root_certs: false"
+    echo "#############################################"
+    echo "#############################################"
+    echo "#Window启动脚本"
+    echo "ngrok -config=ngrok.cfg -subdomain=你域名的前缀  本地映射的端口号"
+    echo "ngrok -config=ngrok.cfg -subdomain=javen  80"
+    echo "#############################################"
+    echo "#############################################"
+    echo "#Linux Mac 启动脚本"
+    echo "./ngrok -config=./ngrok.cfg -subdomain=你域名的前缀  本地映射的端口号"
+    echo "./ngrok -config=./ngrok.cfg -subdomain=javen  80"
+    echo "#Linux Mac 后台启动脚本"
+    echo "setsid ./ngrok -config=./ngrok.cfg -subdomain=javen 80"
+    echo "#############################################"
     ;;
-    *) echo "";;
+*) echo "" ;;
 esac
+
+echo
+echo
+echo
+echo "Done!"
+echo
+echo
+echo
