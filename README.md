@@ -17,3 +17,13 @@ ENV-Success: Ubuntu 18.04 LTS (Server&Client)
 ### Http -> Https
 
 1. certbot
+
+
+### Server Params
+custom ngrok tunnel proxy: -tunnelAddr=":14443"
+
+# warning
+
+make sure your SEVER / CLIENT/ CERTIFICATION are in same domain, otherwise the server will throw Error like:
+
+- Failed to read message: remote error: tls: bad certificate
