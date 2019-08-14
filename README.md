@@ -22,7 +22,7 @@ ENV-Success: Ubuntu 18.04 LTS (Server&Client)
 ### Server Params
 custom ngrok tunnel proxy: -tunnelAddr=":14443"
 
-# warning
+# NOTE
 
 make sure your SEVER / CLIENT/ CERTIFICATION are in same domain, otherwise the server will throw Error like:
 
