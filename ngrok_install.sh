@@ -73,7 +73,7 @@ install_ngrok() {
 
 # 卸载ngrok
 uninstall_ngrok() {
-    rm -rf /usr/local/ngrok
+    rm -rf /usr/local/ngrok*
 }
 
 # 编译客户端
